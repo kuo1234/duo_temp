@@ -1,0 +1,9 @@
+{
+  "environment": "development",
+
+  "api": {
+    "base_url_dev": "http://localhost:5000/api",
+    "base_url_prod": ""
+  }
+}
+
