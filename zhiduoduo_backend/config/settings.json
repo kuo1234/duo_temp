@@ -1,0 +1,9 @@
+{
+    "environment": "development",
+
+    "firebase": {
+        "credential_development": "credentials/firebase_credentials_development.json",
+        "credential_production": "credentials/firebase_credentials_production.json",
+        "credential_staging": "credentials/firebase_credentials_staging.json"
+    }
+}

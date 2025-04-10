@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+venv/
+.env/
+env/
+*.egg-info/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Flask cache
+instance/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Flask compiled files
+*.bak
+*.swp
+
+# Config and secrets
+config/app_settings.json
+credentials/*.json
+!credentials/firebase_credentials_example.json  # 可放一份範例
+
+# Jupyter notebooks (如有用)
+*.ipynb_checkpoints/
+
+# Pytest cache
+.pytest_cache/
+.cache/
+
+# Pip
+pip-log.txt
+
+# pyinstaller
+dist/
+build/
