@@ -26,6 +26,7 @@ class Student {
   String verificationCode;
   String verificationMethod;
   String? id;
+  bool isApproved;
 
   Student({
     this.id,
@@ -51,10 +52,12 @@ class Student {
     required this.password,
     required this.verificationCode,
     required this.verificationMethod,
+    this.isApproved = false,
   });
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'studentName': studentName,
       'parentName': parentName,
       'birthDate': birthDate.toIso8601String(),
@@ -77,12 +80,13 @@ class Student {
       'password': password,
       'verificationCode': verificationCode,
       'verificationMethod': verificationMethod,
+      'isApproved': false, // 預設為false
     };
   }
 
   factory Student.fromJson(Map<String, dynamic> json, {String? id}) {
     return Student(
-      id: id,
+      id: json['id'] ?? '',
       studentName: json['studentName'] ?? '',
       parentName: json['parentName'] ?? '',
       birthDate:
@@ -119,6 +123,7 @@ class Student {
       password: json['password'] ?? '',
       verificationCode: json['verificationCode'] ?? '',
       verificationMethod: json['verificationMethod'] ?? '',
+      isApproved: json['isApproved'] ?? false,
     );
   }
   

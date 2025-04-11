@@ -30,9 +30,11 @@ def log_response_info(response):
 from blueprints.bp_register_api import bp_register_api
 app.register_blueprint(bp_register_api, url_prefix='/api')
 
-from blueprints.bp_review_api import bp_review_api
-app.register_blueprint(bp_review_api, url_prefix='/api')
+from blueprints.bp_approve_api import bp_approve_api
+app.register_blueprint(bp_approve_api, url_prefix='/api')
 
+from blueprints.set_approve_api import set_approve_api
+app.register_blueprint(set_approve_api, url_prefix='/api')
 
 
 if __name__ == '__main__':

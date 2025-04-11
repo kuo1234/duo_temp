@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:zhi_duo_duo/router/app_router.gr.dart';
 
+
 @AutoRouterConfig(replaceInRouteName: 'View,Route')
 class AppRouter extends RootStackRouter {
   @override
@@ -17,10 +18,11 @@ class AppRouter extends RootStackRouter {
       page: StudentRegistrationPage.page,
       children: [],
     ),
-    AutoRoute(
-      path: '/student-review',
-      page: StudentReviewPage.page,
+     AutoRoute(
+      path: '/student-approve',
+      page: StudentApprove.page,
       children: [],
     ),
+   
   ];
 }

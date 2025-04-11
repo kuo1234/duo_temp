@@ -14,8 +14,8 @@ import 'package:zhi_duo_duo/router/custom_router/empty_router.dart' as _i1;
 import 'package:zhi_duo_duo/ui/pages/example_view/example_view.dart' as _i2;
 import 'package:zhi_duo_duo/ui/pages/sign_up_view.dart' as _i3;
 import 'package:zhi_duo_duo/ui/pages/start_view.dart' as _i4;
-import 'package:zhi_duo_duo/ui/pages/student_registration_page.dart' as _i5;
-import 'package:zhi_duo_duo/ui/pages/student_review_page.dart' as _i6;
+import 'package:zhi_duo_duo/ui/pages/student_approve.dart' as _i5;
+import 'package:zhi_duo_duo/ui/pages/student_registration_page.dart' as _i6;
 
 /// generated route for
 /// [_i1.EmptyRouterPage]
@@ -82,7 +82,23 @@ class StartRoute extends _i7.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i5.StudentRegistrationPage]
+/// [_i5.StudentApprove]
+class StudentApprove extends _i7.PageRouteInfo<void> {
+  const StudentApprove({List<_i7.PageRouteInfo>? children})
+    : super(StudentApprove.name, initialChildren: children);
+
+  static const String name = 'StudentApprove';
+
+  static _i7.PageInfo page = _i7.PageInfo(
+    name,
+    builder: (data) {
+      return const _i5.StudentApprove();
+    },
+  );
+}
+
+/// generated route for
+/// [_i6.StudentRegistrationPage]
 class StudentRegistrationPage extends _i7.PageRouteInfo<void> {
   const StudentRegistrationPage({List<_i7.PageRouteInfo>? children})
     : super(StudentRegistrationPage.name, initialChildren: children);
@@ -92,23 +108,7 @@ class StudentRegistrationPage extends _i7.PageRouteInfo<void> {
   static _i7.PageInfo page = _i7.PageInfo(
     name,
     builder: (data) {
-      return const _i5.StudentRegistrationPage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i6.StudentReviewPage]
-class StudentReviewPage extends _i7.PageRouteInfo<void> {
-  const StudentReviewPage({List<_i7.PageRouteInfo>? children})
-    : super(StudentReviewPage.name, initialChildren: children);
-
-  static const String name = 'StudentReviewPage';
-
-  static _i7.PageInfo page = _i7.PageInfo(
-    name,
-    builder: (data) {
-      return _i6.StudentReviewPage();
+      return const _i6.StudentRegistrationPage();
     },
   );
 }

@@ -10,6 +10,6 @@ class StartViewModel extends BaseViewModel {
   }
   void onreviewPressed(BuildContext context) {
     // Use context.router instead of AutoRouter.of(context)
-    context.router.push(const StudentReviewPage());
+    context.router.push(const StudentApprove());
   }
 }

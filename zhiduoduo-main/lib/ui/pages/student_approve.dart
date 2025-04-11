@@ -1,22 +1,30 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:zhi_duo_duo/viewmodels/student_review_page_view_model.dart';
+import 'package:zhi_duo_duo/viewmodels/student_approve_view_model.dart';
 import 'package:zhi_duo_duo/ui/pages/base_view.dart';
 import 'package:zhi_duo_duo/core/models/student.dart';
 import 'dart:convert';
-
 @RoutePage()
-class StudentReviewPage extends StatelessWidget {
-  const StudentReviewPage({super.key});
+class StudentApprove extends StatelessWidget {
+  const StudentApprove({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<StudentReviewModel>(
-      modelProvider: () => StudentReviewModel(),
+    return BaseView<StudentApproveModel>(
+      modelProvider: () => StudentApproveModel(),
       builder: (context, model, child) {
         return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                context.router.pop(); // 使用 auto_route 回上一頁
+              },
+            ),
+            title: Text('學生審核'),
+          ),
           body: FutureBuilder<List<Student>>(
-            future: model.getPendingStudents(),
+            future: model.getApproveStudents(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -47,7 +55,6 @@ class StudentReviewPage extends StatelessWidget {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text content on the left
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,29 +65,21 @@ class StudentReviewPage extends StatelessWidget {
                                     ),
                                     Text("家長姓名：${student.parentName}"),
                                     Text("性別：${student.gender}"),
-                                    Text(
-                                      "生日：${student.birthDate.toLocal()}".split(
-                                        ' ',
-                                      )[0],
-                                    ),
+                                    Text("生日：${student.birthDate.toLocal()}".split(' ')[0]),
                                     Text("Email：${student.parentEmail}"),
                                     Text("電話：${student.parentPhone}"),
                                     Text("驗證方式：${student.verificationMethod}"),
                                   ],
                                 ),
                               ),
-                              // Image on the right
                               if (student.profilePicture.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(left: 16),
                                   child: Image.memory(
                                     base64Decode(student.profilePicture),
                                     height: 100,
-                                    width:
-                                        100, // Added width to control image size
-                                    fit:
-                                        BoxFit
-                                            .cover, // Ensure the image fits nicely
+                                    width: 100,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                             ],
@@ -89,20 +88,12 @@ class StudentReviewPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed:
-                                    () => model.approveStudent(
-                                      student.id ?? '',
-                                      true,
-                                    ),
+                                onPressed: () => model.approveStudent(student.id ?? '', true),
                                 child: Text('通過'),
                               ),
                               SizedBox(width: 8),
                               OutlinedButton(
-                                onPressed:
-                                    () => model.approveStudent(
-                                      student.id ?? '',
-                                      false,
-                                    ),
+                                onPressed: () => model.approveStudent(student.id ?? '', false),
                                 child: Text('不通過'),
                               ),
                             ],
