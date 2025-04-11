@@ -1,24 +1,20 @@
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
 import 'package:zhi_duo_duo/viewmodels/base_view_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zhi_duo_duo/core/models/student.dart';
+import 'package:zhi_duo_duo/core/services/api_service.dart';
 
 class StudentReviewModel extends BaseViewModel {
-  final _firestore = FirebaseFirestore.instance;
-
- Stream<List<Student>> getPendingStudents() {
-  return FirebaseFirestore.instance
-      .collection('students')
-      .where('isApproved', isEqualTo: null)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Student.fromJson(doc.data(), id: doc.id))
-          .toList());
-}
-
+  final ApiService _apiService = ApiService();
+  Future<List<Student>> getPendingStudents() async {
+    final data = await _apiService.get('/review');
+    return (data as List).map((json) => Student.fromJson(json)).toList();
+  }
 
   Future<void> approveStudent(String id, bool approved) async {
-    await _firestore.collection('students').doc(id).update({
-      'isApproved': approved,
-    });
+    await _apiService.put(
+      '/students/$id/approve',
+      body: {'isApproved': approved},
+    );
   }
 }

@@ -15,9 +15,8 @@ class StudentReviewPage extends StatelessWidget {
       modelProvider: () => StudentReviewModel(),
       builder: (context, model, child) {
         return Scaffold(
-          appBar: AppBar(title: Text('學生審核')),
-          body: StreamBuilder<List<Student>>(
-            stream: model.getPendingStudents(),
+          body: FutureBuilder<List<Student>>(
+            future: model.getPendingStudents(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -37,7 +36,9 @@ class StudentReviewPage extends StatelessWidget {
                   return Card(
                     margin: EdgeInsets.all(10),
                     elevation: 4,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -51,10 +52,17 @@ class StudentReviewPage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("學生姓名：${student.studentName}", style: TextStyle(fontSize: 18)),
+                                    Text(
+                                      "學生姓名：${student.studentName}",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
                                     Text("家長姓名：${student.parentName}"),
                                     Text("性別：${student.gender}"),
-                                    Text("生日：${student.birthDate.toLocal()}".split(' ')[0]),
+                                    Text(
+                                      "生日：${student.birthDate.toLocal()}".split(
+                                        ' ',
+                                      )[0],
+                                    ),
                                     Text("Email：${student.parentEmail}"),
                                     Text("電話：${student.parentPhone}"),
                                     Text("驗證方式：${student.verificationMethod}"),
@@ -68,8 +76,11 @@ class StudentReviewPage extends StatelessWidget {
                                   child: Image.memory(
                                     base64Decode(student.profilePicture),
                                     height: 100,
-                                    width: 100, // Added width to control image size
-                                    fit: BoxFit.cover, // Ensure the image fits nicely
+                                    width:
+                                        100, // Added width to control image size
+                                    fit:
+                                        BoxFit
+                                            .cover, // Ensure the image fits nicely
                                   ),
                                 ),
                             ],
@@ -78,12 +89,20 @@ class StudentReviewPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed: () => model.approveStudent(student.id ?? '', true),
+                                onPressed:
+                                    () => model.approveStudent(
+                                      student.id ?? '',
+                                      true,
+                                    ),
                                 child: Text('通過'),
                               ),
                               SizedBox(width: 8),
                               OutlinedButton(
-                                onPressed: () => model.approveStudent(student.id ?? '', false),
+                                onPressed:
+                                    () => model.approveStudent(
+                                      student.id ?? '',
+                                      false,
+                                    ),
                                 child: Text('不通過'),
                               ),
                             ],
