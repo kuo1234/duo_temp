@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:zhi_duo_duo/core/models/course.dart';
@@ -6,9 +5,12 @@ import 'package:zhi_duo_duo/viewmodels/coursebrowse_view_model.dart';
 import 'base_view.dart';
 
 @RoutePage()
-/// 瀏覽課程頁面
 class CourseBrowse extends StatelessWidget {
   const CourseBrowse({super.key});
+
+  final List<String> categories = const [
+    '全部', '語言學習', '音樂', '藝術', '程式設計', '科學', '運動',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -19,86 +21,110 @@ class CourseBrowse extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      '瀏覽課程',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 1. 固定標題
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('瀏覽課程',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 24),
-                  Row(
+                ),
+
+                // 2. 搜尋欄與分類 Chips（橫向）
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
                     children: [
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: '搜尋課程...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                             contentPadding: EdgeInsets.symmetric(horizontal: 12),
                           ),
                         ),
                       ),
                       SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {},
-                      ),
+                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      _buildCategoryChip('全部', true),
-                      _buildCategoryChip('語言學習', false),
-                      _buildCategoryChip('音樂', false),
-                      _buildCategoryChip('藝術', false),
-                      _buildCategoryChip('程式設計', false),
-                      _buildCategoryChip('科學', false),
-                      _buildCategoryChip('運動', false),
-                    ],
+                ),
+                SizedBox(
+                  height: 40,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: categories.length,
+                    separatorBuilder: (_, __) => SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      final isSelected = model.selectedCategory == category;
+                      return ChoiceChip(
+                        label: Text(category),
+                        selected: isSelected,
+                        onSelected: (_) => model.applyFilter(category),
+                        selectedColor: Colors.blue,
+                        backgroundColor: Colors.white,
+                        labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.blue),
+                        side: BorderSide(color: Colors.blue),
+                      );
+                    },
                   ),
-                  SizedBox(height: 24),
-                  if (model.isBusy)
-                    Center(child: CircularProgressIndicator())
-                  else if (model.courses.isEmpty)
-                    Center(child: Text('目前沒有課程'))
-                  else
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: model.courses.length,
-                      itemBuilder: (context, index) {
-                        final course = model.courses[index];
-                        return _buildCourseCard(course);
-                      },
-                    ),
-                ],
-              ),
+                ),
+
+                SizedBox(height: 16),
+
+                // 3. 課程列表 + 分頁，放在 Expanded 內滾動
+                Expanded(
+                  child: model.isBusy
+                      ? Center(child: CircularProgressIndicator())
+                      : model.filteredCourses.isEmpty
+                          ? Center(child: Text('目前沒有課程'))
+                          : Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: model.currentPageCourses.length,
+                                    itemBuilder: (context, index) {
+                                      final course = model.currentPageCourses[index];
+                                      return _buildCourseCard(course);
+                                    },
+                                  ),
+                                ),
+                                if (model.totalPages > 1)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: List.generate(model.totalPages, (index) {
+                                        final page = index + 1;
+                                        final isSelected = model.currentPage == page;
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
+                                              foregroundColor: isSelected ? Colors.white : Colors.black,
+                                            ),
+                                            onPressed: () => model.changePage(page),
+                                            child: Text('$page'),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                ),
+              ],
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildCategoryChip(String label, bool selected) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) {},
-      selectedColor: Colors.blue,
-      backgroundColor: Colors.white,
-      labelStyle: TextStyle(
-        color: selected ? Colors.white : Colors.blue,
-      ),
-      side: BorderSide(color: Colors.blue),
     );
   }
 
@@ -147,21 +173,6 @@ class CourseBrowse extends StatelessWidget {
             Text('備註: ${course.note}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
-      ),
-    );
-  }
-
-
-  Widget _buildLevelTag(String label, Color color) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
       ),
     );
   }
