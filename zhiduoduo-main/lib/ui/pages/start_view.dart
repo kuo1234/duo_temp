@@ -40,6 +40,7 @@ class StartView extends StatelessWidget {
                       ),
                     )
                   ),
+
                   Container(
                     // 按鈕寬度、高度
                     // width: 200,
@@ -47,23 +48,25 @@ class StartView extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        child: Text('審核', style: TextStyle(fontSize: 18, fontWeight: null, color: null),),
+                        child: Text('瀏覽', style: TextStyle(fontSize: 18, fontWeight: null, color: null),),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red, // 按鈕背景顏色
                           foregroundColor: Colors.white, // 按鈕文字顏色
                           shadowColor: Colors.blue, // 按鈕陰影顏色
                           // elevation: 10, // 按鈕陰影大小
                           //邊緣距離
-                          
+
                           // 貝塞爾曲線形狀按鈕
                           shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(28),),
                         ),
                         onPressed: () {
-                          model.onreviewPressed(context);
+                          model.onSearchPressed(context);
                         },
                       ),
                     )
                   ),
+
+
                   // 按鈕 : 稍後加入會員
                   Container(
                     height: 50,

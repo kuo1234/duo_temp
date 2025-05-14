@@ -36,6 +36,9 @@ app.register_blueprint(bp_approve_api, url_prefix='/api')
 from blueprints.set_approve_api import set_approve_api
 app.register_blueprint(set_approve_api, url_prefix='/api')
 
+from blueprints.class_search_api import class_search_api
+app.register_blueprint(class_search_api, url_prefix='/api')
+
 
 if __name__ == '__main__':
     if settings.env == 'development':

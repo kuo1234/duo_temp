@@ -56,6 +56,7 @@ class StudentApprove extends StatelessWidget {
                                           Text("Email：${student.parentEmail}"),
                                           Text("電話：${student.parentPhone}"),
                                           Text("驗證方式：${student.verificationMethod}"),
+                                          Text("驗證是否通過：${student.isApproved ? '是' : '否'}"),
                                         ],
                                       ),
                                     ),

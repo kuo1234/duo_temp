@@ -23,6 +23,9 @@ class AppRouter extends RootStackRouter {
       page: StudentApprove.page,
       children: [],
     ),
-   
+    AutoRoute(path: '/curse_search',
+      page: CourseSearch.page,
+      children: [],
+    )
   ];
 }

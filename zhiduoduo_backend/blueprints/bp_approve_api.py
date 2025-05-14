@@ -17,13 +17,17 @@ def get_approve_students():
         data = doc.to_dict()
         data['id'] = doc.id
 
-        # 如果缺少 isApproved，就補上 False
-        if 'isApproved' not in data:
-            students_ref.document(doc.id).update({'isApproved': False})
-            data['isApproved'] = False
-
+       
         # 只回傳 isApproved 為 False 的
         if data['isApproved'] is False:
             result.append(data)
 
     return jsonify(result)
+
+
+
+
+ # 如果缺少 isApproved，就補上 False
+        # if 'isApproved' not in data:
+        #     students_ref.document(doc.id).update({'isApproved': False})
+        #     data['isApproved'] = False
