@@ -11,7 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i8;
 import 'package:zhi_duo_duo/router/custom_router/empty_router.dart' as _i2;
-import 'package:zhi_duo_duo/ui/pages/coursesearch_view.dart' as _i1;
+import 'package:zhi_duo_duo/ui/pages/coursebrowse_view.dart' as _i1;
 import 'package:zhi_duo_duo/ui/pages/example_view/example_view.dart' as _i3;
 import 'package:zhi_duo_duo/ui/pages/sign_up_view.dart' as _i4;
 import 'package:zhi_duo_duo/ui/pages/start_view.dart' as _i5;
@@ -19,17 +19,17 @@ import 'package:zhi_duo_duo/ui/pages/student_approve.dart' as _i6;
 import 'package:zhi_duo_duo/ui/pages/student_registration_page.dart' as _i7;
 
 /// generated route for
-/// [_i1.CourseSearch]
-class CourseSearch extends _i8.PageRouteInfo<void> {
-  const CourseSearch({List<_i8.PageRouteInfo>? children})
-    : super(CourseSearch.name, initialChildren: children);
+/// [_i1.CourseBrowse]
+class CourseBrowse extends _i8.PageRouteInfo<void> {
+  const CourseBrowse({List<_i8.PageRouteInfo>? children})
+    : super(CourseBrowse.name, initialChildren: children);
 
-  static const String name = 'CourseSearch';
+  static const String name = 'CourseBrowse';
 
   static _i8.PageInfo page = _i8.PageInfo(
     name,
     builder: (data) {
-      return const _i1.CourseSearch();
+      return const _i1.CourseBrowse();
     },
   );
 }

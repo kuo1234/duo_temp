@@ -8,7 +8,7 @@ import 'package:zhi_duo_duo/viewmodels/sign_up_view_model.dart';
 import 'package:zhi_duo_duo/viewmodels/start_view_model.dart';
 import 'package:zhi_duo_duo/viewmodels/student_approve_view_model.dart';
 import 'package:zhi_duo_duo/viewmodels/student_view_model.dart';
-import 'package:zhi_duo_duo/viewmodels/coursesearch_view_model.dart';
+import 'package:zhi_duo_duo/viewmodels/coursebrowse_view_model.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -22,5 +22,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SignUpViewModel());
   locator.registerLazySingleton(() => StudentViewModel());
   locator.registerLazySingleton(() => StudentApproveModel());
-  locator.registerLazySingleton(() => CourseSearchViewModel());
+  locator.registerLazySingleton(() => CourseBrowseViewModel());
 }

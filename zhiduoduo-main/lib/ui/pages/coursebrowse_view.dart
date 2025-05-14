@@ -2,17 +2,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:zhi_duo_duo/core/models/course.dart';
-import 'package:zhi_duo_duo/viewmodels/coursesearch_view_model.dart';
+import 'package:zhi_duo_duo/viewmodels/coursebrowse_view_model.dart';
 import 'base_view.dart';
 
 @RoutePage()
-class CourseSearch extends StatelessWidget {
-  const CourseSearch({super.key});
+/// 瀏覽課程頁面
+class CourseBrowse extends StatelessWidget {
+  const CourseBrowse({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<CourseSearchViewModel>(
-      modelProvider: () => CourseSearchViewModel(),
+    return BaseView<CourseBrowseViewModel>(
+      modelProvider: () => CourseBrowseViewModel(),
       onModelReady: (model) => model.getCourses(),
       builder: (context, model, child) {
         return Scaffold(

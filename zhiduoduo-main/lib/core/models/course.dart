@@ -1,19 +1,21 @@
 class Course {
-  final String modifiedTime;
-  final String courseTitle;
-  final String courseStartTime;
-  final String price;
-  final List<String> courseCategories;
-  final String introduction;
-  final String venue;
-  final List<String> venueMedia;
-  final String grade;
-  final String genderPerfer;
-  final int teacherRate;
-  final String teacherImage;
-  final String note;
+  String modifiedTime;
+  String courseTitle;
+  String courseStartTime;
+  String price;
+  List<String> courseCategories;
+  String introduction;
+  String venue;
+  List<String> venueMedia;
+  String grade;
+  String genderPerfer;
+  int teacherRate;
+  String teacherImage;
+  String note;
+  String? id;
 
   Course({
+    this.id,
     required this.modifiedTime,
     required this.courseTitle,
     required this.courseStartTime,
@@ -29,8 +31,31 @@ class Course {
     required this.note,
   });
 
+  Map<String, dynamic> tojson(){
+    return {
+      'id': id,
+      'modifiedTime': modifiedTime,
+      'courseTitle': courseTitle,
+      'courseStartTime': courseStartTime,
+      'price': price,
+      'courseCategories': courseCategories,
+      'introduction': introduction,
+      'venue': venue,
+      'venueMedia': venueMedia,
+      'grade': grade,
+      'genderPerfer': genderPerfer,
+      'teacherRate': teacherRate,
+      'teacherImage': teacherImage,
+      'note': note,
+    };
+  }
+
+
+
+
   factory Course.fromJson(Map<String, dynamic> json, {String? id}) {
     return Course(
+      id: json['id'] ?? '',
       modifiedTime: json['modifiedTime'] ?? '',
       courseTitle: json['courseTitle'] ?? '',
       courseStartTime: json['courseStartTime'] ?? '',

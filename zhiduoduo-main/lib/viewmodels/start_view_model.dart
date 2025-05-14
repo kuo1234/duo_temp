@@ -14,7 +14,7 @@ class StartViewModel extends BaseViewModel {
   }
   void onSearchPressed(BuildContext context) {
     // Use context.router instead of AutoRouter.of(context)
-    context.router.push(const CourseSearch());
+    context.router.push(const CourseBrowse());
   }
 
 }
