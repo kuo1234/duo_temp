@@ -1,6 +1,7 @@
 import 'package:zhi_duo_duo/viewmodels/base_view_model.dart';
 import 'package:zhi_duo_duo/core/models/course.dart';
 import 'package:zhi_duo_duo/core/services/api_service.dart';
+
 class CourseBrowseViewModel extends BaseViewModel {
   final ApiService _apiService = ApiService();
 
@@ -13,7 +14,7 @@ class CourseBrowseViewModel extends BaseViewModel {
 
   String _selectedCategory = '全部';
   int _currentPage = 1;
-  final int pageSize = 7;
+  final int pageSize = 3;
 
   String get selectedCategory => _selectedCategory;
   int get currentPage => _currentPage;
@@ -56,4 +57,3 @@ class CourseBrowseViewModel extends BaseViewModel {
     notifyListeners();
   }
 }
-

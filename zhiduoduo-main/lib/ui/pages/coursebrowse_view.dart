@@ -24,7 +24,6 @@ class CourseBrowse extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. 固定標題
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16),
@@ -33,8 +32,6 @@ class CourseBrowse extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // 2. 搜尋欄與分類 Chips（橫向）
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -75,10 +72,7 @@ class CourseBrowse extends StatelessWidget {
                     },
                   ),
                 ),
-
                 SizedBox(height: 16),
-
-                // 3. 課程列表 + 分頁，放在 Expanded 內滾動
                 Expanded(
                   child: model.isBusy
                       ? Center(child: CircularProgressIndicator())
@@ -100,21 +94,21 @@ class CourseBrowse extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(vertical: 8),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
-                                      children: List.generate(model.totalPages, (index) {
-                                        final page = index + 1;
-                                        final isSelected = model.currentPage == page;
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
-                                              foregroundColor: isSelected ? Colors.white : Colors.black,
-                                            ),
-                                            onPressed: () => model.changePage(page),
-                                            child: Text('$page'),
-                                          ),
-                                        );
-                                      }),
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_left),
+                                          onPressed: model.currentPage > 1
+                                              ? () => model.changePage(model.currentPage - 1)
+                                              : null,
+                                        ),
+                                        ..._buildPageButtons(model),
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_right),
+                                          onPressed: model.currentPage < model.totalPages
+                                              ? () => model.changePage(model.currentPage + 1)
+                                              : null,
+                                        ),
+                                      ],
                                     ),
                                   ),
                               ],
@@ -126,6 +120,35 @@ class CourseBrowse extends StatelessWidget {
         );
       },
     );
+  }
+
+  List<Widget> _buildPageButtons(CourseBrowseViewModel model) {
+    const maxButtons = 5;
+    int startPage = (model.currentPage - (maxButtons ~/ 2)).clamp(1, model.totalPages);
+    int endPage = (startPage + maxButtons - 1).clamp(1, model.totalPages);
+    startPage = (endPage - maxButtons + 1).clamp(1, model.totalPages);
+
+    return List.generate(endPage - startPage + 1, (index) {
+      final page = startPage + index;
+      final isSelected = model.currentPage == page;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: GestureDetector(
+          onTap: () => model.changePage(page),
+          child: CircleAvatar(
+            radius: 16,
+            backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
+            child: Text(
+              '$page',
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildCourseCard(Course course) {
