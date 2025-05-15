@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zhi_duo_duo/core/models/course.dart';
 import 'package:zhi_duo_duo/viewmodels/coursebrowse_view_model.dart';
 import 'base_view.dart';
+import 'search_filter_sheet.dart';
 
 @RoutePage()
 class CourseBrowse extends StatelessWidget {
@@ -14,143 +15,131 @@ class CourseBrowse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<CourseBrowseViewModel>(
-      modelProvider: () => CourseBrowseViewModel(),
-      onModelReady: (model) => model.getCourses(),
-      builder: (context, model, child) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('瀏覽課程',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: '搜尋課程...',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: categories.length,
-                    separatorBuilder: (_, __) => SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      final isSelected = model.selectedCategory == category;
-                      return ChoiceChip(
-                        label: Text(category),
-                        selected: isSelected,
-                        onSelected: (_) => model.applyFilter(category),
-                        selectedColor: Colors.blue,
-                        backgroundColor: Colors.white,
-                        labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.blue),
-                        side: BorderSide(color: Colors.blue),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-                Expanded(
-                  child: model.isBusy
-                      ? Center(child: CircularProgressIndicator())
-                      : model.filteredCourses.isEmpty
-                          ? Center(child: Text('目前沒有課程'))
-                          : Column(
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: model.currentPageCourses.length,
-                                    itemBuilder: (context, index) {
-                                      final course = model.currentPageCourses[index];
-                                      return _buildCourseCard(course);
-                                    },
-                                  ),
+  return BaseView<CourseBrowseViewModel>(
+    modelProvider: () => CourseBrowseViewModel(),
+    onModelReady: (model) => model.getCourses(),
+    builder: (context, model, child) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              _buildSearchBar(context, model),
+              _buildCategoryChips(context, model),
+              const SizedBox(height: 16),
+              Expanded(
+                child: model.isBusy
+                    ? const Center(child: CircularProgressIndicator())
+                    : model.filteredCourses.isEmpty
+                        ? const Center(child: Text('目前沒有課程'))
+                        : Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: model.currentPageCourses.length,
+                                  itemBuilder: (context, index) {
+                                    final course = model.currentPageCourses[index];
+                                    return _buildCourseCard(course);
+                                  },
                                 ),
-                                if (model.totalPages > 1)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_left),
-                                          onPressed: model.currentPage > 1
-                                              ? () => model.changePage(model.currentPage - 1)
-                                              : null,
-                                        ),
-                                        ..._buildPageButtons(model),
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_right),
-                                          onPressed: model.currentPage < model.totalPages
-                                              ? () => model.changePage(model.currentPage + 1)
-                                              : null,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  List<Widget> _buildPageButtons(CourseBrowseViewModel model) {
-    const maxButtons = 5;
-    int startPage = (model.currentPage - (maxButtons ~/ 2)).clamp(1, model.totalPages);
-    int endPage = (startPage + maxButtons - 1).clamp(1, model.totalPages);
-    startPage = (endPage - maxButtons + 1).clamp(1, model.totalPages);
-
-    return List.generate(endPage - startPage + 1, (index) {
-      final page = startPage + index;
-      final isSelected = model.currentPage == page;
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: GestureDetector(
-          onTap: () => model.changePage(page),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
-            child: Text(
-              '$page',
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold,
+                              ),
+                              if (model.totalPages > 1)
+                                _buildPagination(model),
+                            ],
+                          ),
               ),
-            ),
+            ],
           ),
         ),
       );
-    });
+    },
+  );
+}
+
+  Widget _buildHeader() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Text(
+          '瀏覽課程',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 
+  Widget _buildSearchBar(BuildContext context, CourseBrowseViewModel model) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: '搜尋課程...',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                builder: (context) => FractionallySizedBox(
+                  heightFactor: 0.9,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: SearchFilterSheet(
+                      onApply: (filters) {
+                        model.applyAdvancedFilter(filters);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryChips(BuildContext context, CourseBrowseViewModel model) {
+  return SizedBox(
+    height: 40,
+    child: ListView.separated(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: categories.length,
+      separatorBuilder: (_, __) => const SizedBox(width: 8),
+      itemBuilder: (context, index) {
+        final category = categories[index];
+        final isSelected = model.selectedCategory == category;
+        return ChoiceChip(
+          label: Text(category),
+          selected: isSelected,
+          onSelected: (_) => model.applyFilter(category),
+          selectedColor: Colors.blue,
+          backgroundColor: Colors.white,
+          labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.blue),
+          side: const BorderSide(color: Colors.blue),
+        );
+      },
+    ),
+  );
+}
   Widget _buildCourseCard(Course course) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -198,5 +187,54 @@ class CourseBrowse extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildPagination(CourseBrowseViewModel model) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_left),
+            onPressed: model.currentPage > 1 ? () => model.changePage(model.currentPage - 1) : null,
+          ),
+          ..._buildPageButtons(model),
+          IconButton(
+            icon: const Icon(Icons.arrow_right),
+            onPressed: model.currentPage < model.totalPages ? () => model.changePage(model.currentPage + 1) : null,
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildPageButtons(CourseBrowseViewModel model) {
+    const maxButtons = 5;
+    int startPage = (model.currentPage - (maxButtons ~/ 2)).clamp(1, model.totalPages);
+    int endPage = (startPage + maxButtons - 1).clamp(1, model.totalPages);
+    startPage = (endPage - maxButtons + 1).clamp(1, model.totalPages);
+
+    return List.generate(endPage - startPage + 1, (index) {
+      final page = startPage + index;
+      final isSelected = model.currentPage == page;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: GestureDetector(
+          onTap: () => model.changePage(page),
+          child: CircleAvatar(
+            radius: 16,
+            backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
+            child: Text(
+              '$page',
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }
