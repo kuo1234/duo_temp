@@ -78,6 +78,8 @@ class CourseBrowseViewModel extends BaseViewModel {
         return false;
       }
 
+      print(course.courseStartTime);
+
       // 時間區間
       if (startDate != null && DateTime.parse(course.courseStartTime).isBefore(startDate)) return false;
       if (endDate != null && DateTime.parse(course.courseStartTime).isAfter(endDate)) return false;
@@ -86,9 +88,12 @@ class CourseBrowseViewModel extends BaseViewModel {
       if (course.teacherRate < minRating) return false;
 
       // 價格區間
-      if (double.tryParse(course.price) == null || 
-          double.parse(course.price) < priceRange.start || 
-          double.parse(course.price) > priceRange.end) return false;
+      var coursePrice = course.price.split('\$')[1].replaceAll(',', '');
+      if (double.tryParse(coursePrice) == null || 
+          double.parse(coursePrice) < priceRange.start || 
+          double.parse(coursePrice) > priceRange.end) {
+        return false;
+      }
 
       // 類別條件
       if (categories.isNotEmpty &&
@@ -96,6 +101,7 @@ class CourseBrowseViewModel extends BaseViewModel {
         return false;
       }
 
+      print(course);
       return true;
     }).toList();
 
